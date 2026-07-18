@@ -1,1 +1,24 @@
+name: Update Role Colors
 
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes ("*/5 * * * *" for every 5)
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install requests pillow
+      - name: Update role colors
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          GUILD_ID:      ${{ vars.GUILD_ID }}
+        run: python update_roles.py
